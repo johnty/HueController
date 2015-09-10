@@ -29,9 +29,18 @@ private slots:
 
     void on_pushButton_3_clicked();
 
+    void on_horizontalSlider_sliderMoved(int position);
+
+    void on_horizontalSlider_valueChanged(int value);
+
+    void on_pushButton_4_clicked();
+
 private:
     Ui::HueControlWindow *ui;
     QNetworkAccessManager *manager;
+
+    void setLightOn(bool isOn, int idx);
+    void setBrightness(int bri, int idx);
 };
 
 #endif // HUECONTROLWINDOW_H
