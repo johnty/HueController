@@ -8,6 +8,8 @@
 #include <QNetworkReply>
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <QTimer>
+
 
 namespace Ui {
 class HueControlWindow;
@@ -22,8 +24,9 @@ public:
     ~HueControlWindow();
 
 private slots:
+
+    //ui slots
     void on_pushButton_clicked();
-    void syncRequestFinished(QNetworkReply* reply);
 
     void on_pushButton_2_clicked();
 
@@ -35,12 +38,21 @@ private slots:
 
     void on_pushButton_4_clicked();
 
+    //custom slots
+    void syncRequestFinished(QNetworkReply* reply);
+    void updateLightStatus();
+
 private:
     Ui::HueControlWindow *ui;
     QNetworkAccessManager *manager;
 
     void setLightOn(bool isOn, int idx);
     void setBrightness(int bri, int idx);
+    void queryLight(int idx);
+
+
+    QTimer *timer;
+
 };
 
 #endif // HUECONTROLWINDOW_H

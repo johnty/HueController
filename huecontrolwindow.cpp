@@ -5,10 +5,14 @@ HueControlWindow::HueControlWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::HueControlWindow)
 {
+    timer = new QTimer(this);
     ui->setupUi(this);
     manager = new QNetworkAccessManager(this);
     connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(syncRequestFinished(QNetworkReply*)));
 
+    connect(timer, SIGNAL(timeout()), this, SLOT(updateLightStatus()));
+
+    timer->start(2000);
 }
 
 HueControlWindow::~HueControlWindow()
@@ -21,12 +25,30 @@ void HueControlWindow::syncRequestFinished(QNetworkReply *reply)
 
     QByteArray data = reply->readAll();
 
-    QJsonDocument doc = QJsonDocument::fromBinaryData(data);
+    QJsonDocument doc = QJsonDocument::fromJson(data);
 
+    qDebug()<< "object count = "<< doc.object().count();
 
-    qDebug() << data;
+    QJsonObject jObj = doc.object();
+    //this is one expected form of json response
+    // for a query of a single light. others (such as a put ack) will have different formats!
 
-    qDebug() << "isEmpty = " << doc.isEmpty();
+    for (QJsonObject::const_iterator it = jObj.begin(); it != jObj.end(); it++)
+    {
+        if (it.key() == "state")
+        {
+            QJsonObject stateObj = it.value().toObject();
+            for (QJsonObject::const_iterator state_it = stateObj.begin(); state_it != stateObj.end(); state_it++)
+            {
+                if (state_it.key() == "on")
+                {
+                    bool isOn = state_it.value().toBool();
+                    qDebug() << "light is on = " << isOn;
+
+                }
+            }
+        }
+    }
 }
 
 void HueControlWindow::on_pushButton_clicked()
@@ -77,7 +99,7 @@ void HueControlWindow::on_pushButton_2_clicked()
 
 void HueControlWindow::on_pushButton_3_clicked()
 {
-     QUrl url("http://192.168.100.230/api/b225912329de4371bdc4d2e18678263/lights/2/");
+     QUrl url("http://192.168.100.230/api/b225912329de4371bdc4d2e18678263/lights/4/");
      QNetworkRequest request(url);
      request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
      manager->get(request);
@@ -140,4 +162,23 @@ void HueControlWindow::on_pushButton_4_clicked()
     QJsonDocument doc(data_obj);
     QByteArray data = doc.toJson();
     manager->put(request, data);
+}
+
+void HueControlWindow::queryLight(int idx)
+{   //note2self: if ask for index, we need to asynchronously
+    // figure out if returned message is actually related
+    // to the light we asked for, or potentially another
+    // previously queued event. (unlikely, but possible situation!)
+
+    QString url_str = "http://192.168.100.230/api/b225912329de4371bdc4d2e18678263/lights/" + QString::number(idx) +"/";
+    QUrl url(url_str);
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    manager->get(request);
+}
+
+void HueControlWindow::updateLightStatus()
+{
+    qDebug() << "timed light update triggered";
+    queryLight(4);
 }
