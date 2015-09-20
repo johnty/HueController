@@ -52,6 +52,7 @@ private:
 
 
     QTimer *timer;
+    int t_count;
 
 };
 

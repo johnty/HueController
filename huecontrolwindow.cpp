@@ -1,6 +1,11 @@
 #include "huecontrolwindow.h"
 #include "ui_huecontrolwindow.h"
 
+#define LAUNDRY_TIMEOUT 15
+#define QUERY_PERIOD 2
+#define COUNT_MAX LAUNDRY_TIMEOUT*60/QUERY_PERIOD
+
+
 HueControlWindow::HueControlWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::HueControlWindow)
@@ -13,6 +18,7 @@ HueControlWindow::HueControlWindow(QWidget *parent) :
     connect(timer, SIGNAL(timeout()), this, SLOT(updateLightStatus()));
 
     timer->start(2000);
+    t_count = COUNT_MAX;
 }
 
 HueControlWindow::~HueControlWindow()
@@ -35,6 +41,8 @@ void HueControlWindow::syncRequestFinished(QNetworkReply *reply)
 
     for (QJsonObject::const_iterator it = jObj.begin(); it != jObj.end(); it++)
     {
+        // if we get this, we don't actually know which light we got it from...
+        // unless we only query a single light, ever.
         if (it.key() == "state")
         {
             QJsonObject stateObj = it.value().toObject();
@@ -45,6 +53,19 @@ void HueControlWindow::syncRequestFinished(QNetworkReply *reply)
                     bool isOn = state_it.value().toBool();
                     qDebug() << "light is on = " << isOn;
 
+                    if (isOn) {
+                        t_count--;
+                        ui->lcdNumber->display(QString::number(t_count));
+                    }
+                    else {
+                        ui->lcdNumber->display(QString::number(999));
+                    }
+                    if (t_count <= 0)
+                    {   //hard coded laundry light switchoff
+                        qDebug() << "timer up. turning light off!!";
+                        setLightOn(false,4);
+                        t_count = COUNT_MAX;
+                    }
                 }
             }
         }
