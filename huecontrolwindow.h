@@ -9,6 +9,7 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QTimer>
+#include <QCheckBox>
 
 
 namespace Ui {
@@ -42,6 +43,10 @@ private slots:
     void syncRequestFinished(QNetworkReply* reply);
     void updateLightStatus();
 
+    void on_pushButton_SelAll_clicked();
+
+    void on_pushButton_SelNone_clicked();
+
 private:
     Ui::HueControlWindow *ui;
     QNetworkAccessManager *manager;
@@ -49,6 +54,10 @@ private:
     void setLightOn(bool isOn, int idx);
     void setBrightness(int bri, int idx);
     void queryLight(int idx);
+
+    void selectAllChecks(bool checked);
+
+    QCheckBox** lightCheckList;
 
 
     QTimer *timer;

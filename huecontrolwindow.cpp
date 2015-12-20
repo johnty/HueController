@@ -2,8 +2,9 @@
 #include "ui_huecontrolwindow.h"
 
 #define LAUNDRY_TIMEOUT 15
-#define QUERY_PERIOD 2
+#define QUERY_PERIOD 10
 #define COUNT_MAX LAUNDRY_TIMEOUT*60/QUERY_PERIOD
+#define NUM_LIGHTS 8
 
 
 HueControlWindow::HueControlWindow(QWidget *parent) :
@@ -17,8 +18,19 @@ HueControlWindow::HueControlWindow(QWidget *parent) :
 
     connect(timer, SIGNAL(timeout()), this, SLOT(updateLightStatus()));
 
-    timer->start(2000);
+    timer->start(QUERY_PERIOD*1000); //query period is in seconds
     t_count = COUNT_MAX;
+
+    lightCheckList = new QCheckBox*[8];
+    lightCheckList[0] = ui->checkBox1;
+    lightCheckList[1] = ui->checkBox1_2;
+    lightCheckList[2] = ui->checkBox1_3;
+    lightCheckList[3] = ui->checkBox1_4;
+    lightCheckList[4] = ui->checkBox1_5;
+    lightCheckList[5] = ui->checkBox1_6;
+    lightCheckList[6] = ui->checkBox1_7;
+    lightCheckList[7] = ui->checkBox1_8;
+
 }
 
 HueControlWindow::~HueControlWindow()
@@ -55,15 +67,16 @@ void HueControlWindow::syncRequestFinished(QNetworkReply *reply)
 
                     if (isOn) {
                         t_count--;
-                        ui->lcdNumber->display(QString::number(t_count));
+                        ui->lcdNumber->display(QString::number(t_count*QUERY_PERIOD)); //in seconds
                     }
                     else {
                         ui->lcdNumber->display(QString::number(999));
+                        t_count = COUNT_MAX; //reset counter
                     }
                     if (t_count <= 0)
                     {   //hard coded laundry light switchoff
                         qDebug() << "timer up. turning light off!!";
-                        setLightOn(false,4);
+                        //setLightOn(false,4);
                         t_count = COUNT_MAX;
                     }
                 }
@@ -82,6 +95,14 @@ void HueControlWindow::on_pushButton_clicked()
         setLightOn(true,3);
     if (ui->checkBox1_4->isChecked())
         setLightOn(true,4);
+    if (ui->checkBox1_5->isChecked())
+        setLightOn(true, 5);
+    if (ui->checkBox1_6->isChecked())
+        setLightOn(true, 6);
+    if (ui->checkBox1_7->isChecked())
+        setLightOn(true, 7);
+    if (ui->checkBox1_8->isChecked())
+        setLightOn(true, 8);
 
     return;
 
@@ -106,6 +127,14 @@ void HueControlWindow::on_pushButton_2_clicked()
         setLightOn(false,3);
     if (ui->checkBox1_4->isChecked())
         setLightOn(false,4);
+    if (ui->checkBox1_5->isChecked())
+        setLightOn(false,5);
+    if (ui->checkBox1_6->isChecked())
+        setLightOn(false,6);
+    if (ui->checkBox1_7->isChecked())
+        setLightOn(false,7);
+    if (ui->checkBox1_8->isChecked())
+        setLightOn(false, 8);
 
     return;
     QUrl url("http://192.168.100.230/api/b225912329de4371bdc4d2e18678263/lights/2/state");
@@ -172,6 +201,16 @@ void HueControlWindow::on_pushButton_4_clicked()
         setBrightness(bri, 3);
     if (ui->checkBox1_4->isChecked())
         setBrightness(bri, 4);
+    if (ui->checkBox1_4->isChecked())
+        setBrightness(bri, 4);
+    if (ui->checkBox1_5->isChecked())
+        setBrightness(bri, 5);
+    if (ui->checkBox1_7->isChecked())
+        setBrightness(bri, 6);
+    if (ui->checkBox1_7->isChecked())
+        setBrightness(bri, 7);
+    if (ui->checkBox1_8->isChecked())
+        setBrightness(bri, 8);
 
     return;
     //int bri = ui->horizontalSlider->value();
@@ -196,10 +235,30 @@ void HueControlWindow::queryLight(int idx)
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
     manager->get(request);
+
 }
 
 void HueControlWindow::updateLightStatus()
 {
     qDebug() << "timed light update triggered";
     queryLight(4);
+}
+
+void HueControlWindow::selectAllChecks(bool checked)
+{
+    for (int i=0; i<NUM_LIGHTS; i++)
+    {
+        if (lightCheckList[i] != NULL)
+            lightCheckList[i]->setChecked(checked);
+    }
+}
+
+void HueControlWindow::on_pushButton_SelAll_clicked()
+{
+    selectAllChecks(true);
+}
+
+void HueControlWindow::on_pushButton_SelNone_clicked()
+{
+    selectAllChecks(false);
 }
