@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>379</width>
-    <height>419</height>
+    <width>403</width>
+    <height>495</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>310</y>
+      <y>400</y>
       <width>115</width>
       <height>32</height>
      </rect>
@@ -31,7 +31,7 @@
     <property name="geometry">
      <rect>
       <x>180</x>
-      <y>310</y>
+      <y>400</y>
       <width>115</width>
       <height>32</height>
      </rect>
@@ -57,7 +57,7 @@
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>270</y>
+      <y>360</y>
       <width>160</width>
       <height>16</height>
      </rect>
@@ -73,7 +73,7 @@
     <property name="geometry">
      <rect>
       <x>220</x>
-      <y>270</y>
+      <y>360</y>
       <width>80</width>
       <height>21</height>
      </rect>
@@ -352,13 +352,65 @@
      <string>Sel None</string>
     </property>
    </widget>
+   <widget class="QCheckBox" name="checkBox1_9">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>280</y>
+      <width>72</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>light 9</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox1_10">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>300</y>
+      <width>72</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>light 10</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox1_11">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>320</y>
+      <width>72</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>light 11</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_11">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>300</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>kitchen</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>379</width>
+     <width>403</width>
      <height>21</height>
     </rect>
    </property>
