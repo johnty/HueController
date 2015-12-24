@@ -47,6 +47,8 @@ private slots:
 
     void on_pushButton_SelNone_clicked();
 
+    void checkPressed();
+
 private:
     Ui::HueControlWindow *ui;
     QNetworkAccessManager *manager;

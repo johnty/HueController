@@ -4,7 +4,7 @@
 #define LAUNDRY_TIMEOUT 15
 #define QUERY_PERIOD 10
 #define COUNT_MAX LAUNDRY_TIMEOUT*60/QUERY_PERIOD
-#define NUM_LIGHTS 11
+#define NUM_LIGHTS 12
 
 
 HueControlWindow::HueControlWindow(QWidget *parent) :
@@ -34,6 +34,12 @@ HueControlWindow::HueControlWindow(QWidget *parent) :
     lightCheckList[8] = ui->checkBox1_9;
     lightCheckList[9] = ui->checkBox1_10;
     lightCheckList[10] = ui->checkBox1_11;
+    lightCheckList[11] = ui->checkBox1_12;
+
+    for (int i=0; i<NUM_LIGHTS; ++i) //allow using checkboxes to control individual lights
+    {
+        connect(lightCheckList[i], SIGNAL(pressed()), this, SLOT(checkPressed()));
+    }
 
 }
 
@@ -229,4 +235,20 @@ void HueControlWindow::on_pushButton_SelAll_clicked()
 void HueControlWindow::on_pushButton_SelNone_clicked()
 {
     selectAllChecks(false);
+}
+
+void HueControlWindow::checkPressed()
+{
+    for (int i=0; i<NUM_LIGHTS; ++i)
+    {
+        if (QObject::sender() == lightCheckList[i])
+        {
+            qDebug() << "check " << i;
+            if (lightCheckList[i]->isChecked()) //NOTE: because this happens before toggle, logic is REVERSED!
+                setLightOn(false, i+1);
+            else
+                setLightOn(true, i+1);
+        }
+    }
+
 }
