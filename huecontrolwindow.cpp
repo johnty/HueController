@@ -4,7 +4,7 @@
 #define LAUNDRY_TIMEOUT 15
 #define QUERY_PERIOD 10
 #define COUNT_MAX LAUNDRY_TIMEOUT*60/QUERY_PERIOD
-#define NUM_LIGHTS 12
+#define NUM_LIGHTS 14
 
 
 HueControlWindow::HueControlWindow(QWidget *parent) :
@@ -35,6 +35,8 @@ HueControlWindow::HueControlWindow(QWidget *parent) :
     lightCheckList[9] = ui->checkBox1_10;
     lightCheckList[10] = ui->checkBox1_11;
     lightCheckList[11] = ui->checkBox1_12;
+    lightCheckList[12] = ui->checkBox1_13;
+    lightCheckList[13] = ui->checkBox1_14;
 
     for (int i=0; i<NUM_LIGHTS; ++i) //allow using checkboxes to control individual lights
     {
