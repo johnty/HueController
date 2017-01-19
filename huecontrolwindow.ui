@@ -167,7 +167,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Laundry Countdown</string>
+     <string>Upstairs Countdown</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_3">

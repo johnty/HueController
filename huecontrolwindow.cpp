@@ -22,6 +22,7 @@ HueControlWindow::HueControlWindow(QWidget *parent) :
     t_count = COUNT_MAX;
 
     //static list of UI elements from QT designer
+    // see Form/labels for light names
     lightCheckList = new QCheckBox*[NUM_LIGHTS];
     lightCheckList[0] = ui->checkBox1;
     lightCheckList[1] = ui->checkBox1_2;
@@ -88,7 +89,7 @@ void HueControlWindow::syncRequestFinished(QNetworkReply *reply)
                     if (t_count <= 0)
                     {   //hard coded laundry light switchoff
                         qDebug() << "timer up. turning light off!!";
-                        //setLightOn(false,4);
+                        setLightOn(false,13);
                         t_count = COUNT_MAX;
                     }
                 }
